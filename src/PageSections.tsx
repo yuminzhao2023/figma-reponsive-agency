@@ -39,7 +39,7 @@ const contactDetails = [
 ]
 
 function DesignArrow({ blue = false }: { blue?: boolean }) {
-  return <img className="design-arrow" src={asset(blue ? 'arrow-blue.svg' : 'arrow-white.svg')} alt="" />
+  return <img className="design-arrow" src={asset(blue ? 'arrow-blue.svg' : 'arrow-white.svg')} loading="lazy" alt="" />
 }
 
 function SectionHeading({ id, children, kind }: { id: string; children: string; kind: string }) {
@@ -56,7 +56,7 @@ function TestimonialCard({ slide, measurement = false }: { slide: number; measur
       {!measurement && <img {...imageProps(current.image, testimonialSizes)} loading="lazy" decoding="async" alt={current.alt} />}
     </div>
     <div className="testimonial-copy">
-      {measurement ? <span className="quote-mark" /> : <img className="quote-mark" src={asset('quote-mark.svg')} alt="" />}
+      {measurement ? <span className="quote-mark" /> : <img className="quote-mark" src={asset('quote-mark.svg')} loading="lazy" alt="" />}
       <blockquote className={slide === 0 ? 'desktop-quote' : undefined}>{current.quote}</blockquote>
       {slide === 0 && <blockquote className="compact-quote">{compactQuote}</blockquote>}
     </div>
@@ -173,15 +173,15 @@ function Testimonials() {
     <div className="container">
       <SectionHeading id="testimonials-heading" kind="testimonials">Happy stories of our clients</SectionHeading>
       <div className="testimonial-carousel">
-        <button type="button" className="slider-control slider-previous" aria-label="Previous testimonial" onClick={() => changeSlide(-1)}><img src={asset('slider-arrow.svg')} alt="" /></button>
+        <button type="button" className="slider-control slider-previous" aria-label="Previous testimonial" onClick={() => changeSlide(-1)}><img src={asset('slider-arrow.svg')} loading="lazy" alt="" /></button>
         <div ref={stage} className="testimonial-stage">
           {testimonials.map((item, index) => <TestimonialCard key={item.image} slide={index} measurement />)}
           <TestimonialCard slide={slide} />
         </div>
-        <button type="button" className="slider-control slider-next" aria-label="Next testimonial" onClick={() => changeSlide(1)}><img src={asset('slider-arrow.svg')} alt="" /></button>
+        <button type="button" className="slider-control slider-next" aria-label="Next testimonial" onClick={() => changeSlide(1)}><img src={asset('slider-arrow.svg')} loading="lazy" alt="" /></button>
       </div>
       <p className="testimonial-announcement" role="status" aria-live="polite" aria-atomic="true">Testimonial {slide + 1} of {testimonials.length}</p>
-      <div className="slider-dots" aria-label="Choose a testimonial">{testimonials.map((item, index) => <button type="button" key={item.image} aria-label={`Show testimonial ${index + 1}`} aria-current={slide === index ? 'true' : undefined} aria-controls="testimonial-slide" onClick={() => selectSlide(index, index > requested.current.index ? 1 : -1)}><img src={asset(slide === index ? 'slider-dot-active.svg' : 'slider-dot.svg')} alt="" /></button>)}</div>
+      <div className="slider-dots" aria-label="Choose a testimonial">{testimonials.map((item, index) => <button type="button" key={item.image} aria-label={`Show testimonial ${index + 1}`} aria-current={slide === index ? 'true' : undefined} aria-controls="testimonial-slide" onClick={() => selectSlide(index, index > requested.current.index ? 1 : -1)}><img src={asset(slide === index ? 'slider-dot-active.svg' : 'slider-dot.svg')} loading="lazy" alt="" /></button>)}</div>
     </div>
   </section>
 }
@@ -215,7 +215,7 @@ export default function PageSections({ children }: { children: ReactNode }) {
       <SectionHeading id="contact-heading" kind="contact">Contact us today</SectionHeading>
       <div className="contact-band"><div className="container contact-layout">
         <div className="contact-details">{contactDetails.map(item => <div className="contact-detail" key={item.title}>
-          <h3><span className="contact-icon"><img src={asset(item.icon)} alt="" /></span>{item.title}</h3>
+          <h3><span className="contact-icon"><img src={asset(item.icon)} loading="lazy" alt="" /></span>{item.title}</h3>
           <p>{item.value}</p>
         </div>)}</div>
         <form className="contact-form" aria-label="Contact request (demo)" aria-describedby="contact-demo" onSubmit={event => { event.preventDefault(); showDemo('contact submission') }}>
@@ -238,8 +238,8 @@ export default function PageSections({ children }: { children: ReactNode }) {
     </main>
     <footer className="site-footer"><div className="container">
       <div className="footer-grid">
-        <div className="footer-brand"><a className="footer-logo" href="#top" aria-label="Creative Design Agency, back to top"><img {...imageProps('footer-logo.png', '(max-width: 1199px) 91px, 102px')} loading="lazy" decoding="async" alt="Creative Design Agency" /></a><div className="social-links" aria-label="Social media (demo)">{['dribbble', 'behance', 'instagram', 'linkedin'].map(name => <button key={name} type="button" aria-label={`${name} (demo)`} onClick={() => showDemo(`${name} profile`)}><img src={asset(`${name}.svg`)} alt="" /></button>)}</div></div>
-        <div className="footer-contact"><h3>Contact</h3><address>{contactDetails.map(item => <p key={item.title}><img src={asset(item.footerIcon)} alt="" /><span>{item.value}</span></p>)}</address></div>
+        <div className="footer-brand"><a className="footer-logo" href="#top" aria-label="Creative Design Agency, back to top"><img {...imageProps('footer-logo.png', '(max-width: 1199px) 91px, 102px')} loading="lazy" decoding="async" alt="Creative Design Agency" /></a><div className="social-links" aria-label="Social media (demo)">{['dribbble', 'behance', 'instagram', 'linkedin'].map(name => <button key={name} type="button" aria-label={`${name} (demo)`} onClick={() => showDemo(`${name} profile`)}><img src={asset(`${name}.svg`)} loading="lazy" alt="" /></button>)}</div></div>
+        <div className="footer-contact"><h3>Contact</h3><address>{contactDetails.map(item => <p key={item.title}><img src={asset(item.footerIcon)} loading="lazy" alt="" /><span>{item.value}</span></p>)}</address></div>
         <nav className="footer-explore" aria-label="Explore"><h3>Explore</h3><a href="#about">About</a>{['Our Team', 'Shop', 'Career'].map(name => <button type="button" key={name} onClick={() => showDemo(`${name} page`)}>{name}</button>)}<a href="#blogs">Blog</a></nav>
         <form className="newsletter" aria-label="Newsletter subscription (demo)" onSubmit={event => { event.preventDefault(); showDemo('newsletter subscription') }}>
           <h3>Subscribe to our Newsletter</h3><div className="form-field"><label htmlFor="newsletter-email">Email<span aria-hidden="true">*</span></label><input id="newsletter-email" name="newsletter-email" type="email" autoComplete="email" required placeholder="Your email here" /></div>
