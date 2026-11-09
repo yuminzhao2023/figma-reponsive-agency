@@ -1,5 +1,30 @@
 # 当前进度
 
+## 面试 Demo 素材简化
+
+2026-11-09（Asia/Shanghai）。用户确认项目用于面试展示，不继续深入开发，授权删除原始图片。
+
+- 删除 `design/source-images/` 中的 18 份原始位图及目录说明，原图合计 58,297,062 B（约 55.60 MiB）。此前的 Public 清理记录为历史操作，原图不再保留。
+- 删除 `scripts/optimize-images.mjs`、`images:optimize` 命令和 `sharp` 开发依赖，同步更新 `package-lock.json`、README 与 `design/README.md`。
+- 保留全部页面资源：49 个 WebP、40 个 SVG，以及三端整页设计参考图。`src/images.ts`、`src/image-manifest.json`、页面代码与样式均未改动；清单中的 `.png` 键是逻辑标识，实际地址指向 WebP。
+- `npm run typecheck`、`npm run lint`、`npm run build`、`git diff --check` 均通过；49 个 WebP 地址全部存在，其余锁定依赖没有变化。
+- 浏览器在 1440、1024、768、390、375 px 截图并检查图片加载，无图片缺失、横向溢出或脚本错误；菜单、轮播、内容展开、对话框和表单交互回归通过。报告位于本机 `/tmp/figma-agency/qa/report.json`。
+- 未调用 Figma 工具或变更设计节点；已有字体与视觉限制见 README，无新增视觉修改。下一步可直接运行演示，无需素材生成流程。
+- 本次用时、用户人工参与时间和可观察的工具额度消耗：未记录。
+
+## Public 资源清理
+
+2026-11-09（Asia/Shanghai）。检查 public 的代码引用、CSS 背景与 mask、动态社交图标、图片清单的全部 src/srcSet 以及图片生成脚本。
+
+- 检查到 107 个文件：89 个页面运行资源、18 个图片生成源文件；没有发现完全无引用、可直接丢弃的资源。
+- 将不参与网页加载的 18 个原始位图从 `public/assets/` 迁至 `design/source-images/`，移出 public 共 58,297,062 B（约 55.60 MiB），保留原图以维持素材追溯和再生成能力。
+- 更新 `scripts/optimize-images.mjs` 的输入目录，以及根 README、`design/README.md` 和新增 `design/source-images/README.md` 的说明。
+- public 现有 89 个文件（40 个 SVG、49 个响应式 WebP），合计 1,972,725 B（约 1.88 MiB）；包含窄屏、展开内容、轮播和不同像素比所需文件，不能仅依据某次浏览器请求记录删除。
+- `npm run images:optimize` 通过，原始输入均存在，重新生成后 `src/image-manifest.json` 和 WebP 文件没有内容变化。
+- 引用核查：无缺失文件、无剩余无引用文件；`npm run typecheck`、`npm run lint`、`npm run build`、`git diff --check` 均通过。
+- 五种宽度浏览器图片加载及菜单、轮播、展开、表单交互回归通过，无图片加载失败、横向溢出或浏览器脚本错误。应用代码和视觉样式未改动。
+- 未调用 Figma 工具；本次用时、人工参与时间和工具费用未记录。
+
 ## 导航弹层动画与外部关闭
 
 2026-11-09（Asia/Shanghai）。为右上角导航弹层添加开关动画与外部点击关闭，修改 `src/App.tsx`、`src/style.css`、README 和本记录。
