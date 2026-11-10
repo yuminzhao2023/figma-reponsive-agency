@@ -6,7 +6,7 @@
 
 ## 技术与运行
 
-React、TypeScript、Vite、普通 CSS，使用 npm 管理依赖。
+React、TypeScript、Vite、普通 CSS，使用 npm 管理依赖。GSAP 与 ScrollTrigger 用于桌面首屏滚动动效。
 
 ```bash
 npm ci
@@ -28,8 +28,9 @@ npm run dev
 - 图片、Logo、菜单和图标来自上述 Figma 文件，页面所需的 WebP、SVG 已保存至 `public/assets/`，不依赖临时 Figma 链接。新增素材对应：评价图片、形状与控制图标 `1:1568`；博客图片 `1:1469`、`1:1422`、`1:1375`；联系图标 `1:1041`；页脚 Logo `1:1072`；社交、页脚联系图标来自 `2:451`；标题装饰来自 `1:1014`—`1:1016` 及三端对应图层。
 - `View more` 的目标行为在设计中未定义；这里暂定为展开其余 4 张卡片，再次点击可收起。
 - 首屏标题参考 [GSAP Revert after animation](https://demos.gsap.com/demo/revert-after-animation/)，仅在桌面布局（宽度 ≥1200 px）加载时自动播放一次逐字翻转、缩放、上移与淡入动画，带轻微回弹，文字入场约 2.4 秒，随后 `Visual` 下划线用 420 ms 从左向右匀速展开。平板和手机直接显示完整标题和下划线，不创建动画层；窄屏加载后放大窗口也不补播。使用原生 Web Animations API 与 CSS，无新增依赖；原始文字始终负责排版及可访问内容，临时字母层按原文实际位置播放，结束后移除，保留空格、字偶距与换行，避免文字恢复时抖动。蓝线仅使用 `scaleX` 变化，不影响布局。开启 `prefers-reduced-motion` 时直接显示完整标题和下划线；任一阶段改变视口宽度或开启减少动态效果，也会立即恢复普通文本和完整下划线。
+- 桌面首屏滚动参考 [Pinned panels with overscroll](https://demos.gsap.com/demo/pinned-panels-with-overscroll/)，新增 GSAP `ScrollTrigger` 处理停驻、进度与响应式清理。照片开头相对视口按约 1.2 倍页面滚动速度上移，进入停驻后用三次缓出曲线逐渐减速，在额外上移 64 px 时平顺停住，由白色区块继续覆盖；减速段自动匹配前段的起始速度，不回弹、不超出位移上限。导航滚出后蓝色首屏在视口顶部停驻，下方白色品牌介绍区按正常文档滚动从下往上覆盖首屏，完全覆盖后结束停驻。向上滚动会还原，无滚轮拦截、强制吸附或额外的空白滚动距离。初始照片超出蓝色区域的部分保留，在开始滚动时逐渐收进覆盖层。仅在宽度 ≥1200 px 且允许动态效果时启用；切换到窄屏或减少动态效果模式会撤销停驻和图片位移，恢复普通滚动。
 - `Let’s talk`、各报价链接和菜单中的 Contact 现在滚动到联系区。菜单支持键盘打开、Escape 关闭和焦点返回；点击页面外部、再次点击按钮、选择链接或 Tab 移出菜单也会关闭。
-- 导航弹层以右上角为原点，180 ms 淡入并轻微下移、缩放，120 ms 收起。关闭时不接受点击和键盘焦点；尊重 `prefers-reduced-motion`，减少动态效果模式直接开关。
+- 导航弹层参考 [GSAP easeReverse — UI interactions](https://demos.gsap.com/demo/easereverse-ui-interactions/) 中的 Dropdown，沿用右上角原点和现有尺寸、配色，采用适度的小幅动效：从 94% 比例及上方 10 px 淡入，380 ms，使用 `back.out(1.4)` 缓出，轻微回弹一次；选项从左侧 7 px 进入，间隔 30 ms。关闭时使用 `easeReverse` 平顺缓出，以 1.6 倍速度收起（完整关闭约 238 ms）；连续开关沿同一时间线从当前状态反向。复用现有 GSAP，无新增依赖；保留三端菜单动画，减少动态效果模式直接开关，中途启用也立即结束运动。关闭时立即禁止点击和键盘焦点。
 - 评价支持前后切换及圆点选择；手机稿未展示方向按钮，因此手机仅展示可点击、可用键盘操作的圆点。不自动播放。
 - 评价切换采用先退出、后进入的 `out-in` 过渡，背景和容器高度固定，不叠加两段可见文案。图片约 140 ms 退出、300 ms 进入，入场位移 18 px；文字入场位移 12 px，较图片延后 40 ms。图片解码后再切换，连续点击在当前过渡完成后合并处理最新目标；开启 `prefers-reduced-motion` 时直接切换。
 - 平板和手机稿的首条评价文案与桌面稿不同，分别按对应设计呈现；其余两条评价采用桌面稿内容适配窄屏。
@@ -58,6 +59,15 @@ WebP 文件和 `src/image-manifest.json` 直接纳入版本管理，开发与构
 
 ## 实现与验证
 
-`src/App.tsx` 保留原有首轮区块，`src/HeroHeading.tsx` 负责首屏标题及入场动画，`src/PageSections.tsx` 负责后半页与演示交互，`src/lower-page.css` 定义后半页布局及响应式样式；`src/images.ts` 配合 `src/image-manifest.json` 管理图片加载属性和响应式图片地址。
+`src/App.tsx` 保留原有首轮区块，`src/HeroHeading.tsx` 负责首屏标题及入场动画，`src/useHeroScroll.ts` 管理桌面首屏停驻、照片位移与白色区域覆盖，`src/useMenuMotion.ts` 管理导航弹层的可反向时间线；`src/PageSections.tsx` 负责后半页与演示交互，`src/lower-page.css` 定义后半页布局及响应式样式；`src/images.ts` 配合 `src/image-manifest.json` 管理图片加载属性和响应式图片地址。
+
+照片动效参数集中在 `src/useHeroScroll.ts` 顶部的 `photoMotion`，减速段的滚动距离按剩余位移、曲线和起始速度自动计算：
+
+| 参数 | 默认值 | 用途 |
+| --- | --- | --- |
+| `initialSpeed` | `1.2` | 初段照片相对视口的移动倍率，超过 1 时快于页面滚动 |
+| `maxLift` | `64` | 照片相对首屏的额外上移上限，单位 px |
+| `slowDownAfter` | `0` | 首屏停驻后，再滚动多少 px 开始减速；使用非负值 |
+| `decelerationPower` | `3` | 缓出曲线强度，3 为三次缓出；建议在 2–4 之间微调 |
 
 2026-11-09 已使用独立无头 Chrome 在 1440、1024、768、390、375 px 截图检查，并实际操作菜单、轮播、展开按钮、对话框及表单。具体执行记录和剩余差异见 `STATUS.md`。

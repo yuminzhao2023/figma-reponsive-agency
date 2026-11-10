@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import PageSections from './PageSections'
 import HeroHeading from './HeroHeading'
+import { useHeroScroll } from './useHeroScroll'
+import { useMenuMotion } from './useMenuMotion'
 import { imageProps, serviceImageSizes } from './images'
 
 const asset = (name: string) => `/assets/${name}`
@@ -23,6 +25,11 @@ function App() {
   const [showAll, setShowAll] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
   const menuPanel = useRef<HTMLElement>(null)
+  const heroPanel = useRef<HTMLElement>(null)
+  const aboutPanel = useRef<HTMLElement>(null)
+
+  useHeroScroll(heroPanel, aboutPanel)
+  useMenuMotion(menuPanel, menuOpen)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -58,7 +65,7 @@ function App() {
       </div>
     </header>
     <PageSections>
-      <section className="hero" aria-labelledby="hero-heading">
+      <section ref={heroPanel} className="hero" aria-labelledby="hero-heading">
         <div className="container hero-inner">
           <div className="hero-copy">
             <HeroHeading />
@@ -67,7 +74,7 @@ function App() {
           <div className="hero-art"><div className="dot-pattern" aria-hidden="true" /><img className="hero-photo" {...imageProps('hero.png', '(max-width: 600px) 291px, (max-width: 1199px) 330px, 576px')} fetchPriority="high" decoding="async" alt="Woman reviewing color palettes at her desk" /></div>
         </div>
       </section>
-      <section id="about" className="about" aria-labelledby="about-heading">
+      <section ref={aboutPanel} id="about" className="about" aria-labelledby="about-heading">
         <div className="container">
           <div className="section-intro"><h2 id="about-heading">Elevate Your Brand Identity</h2><p>Unlock the true potential of your brand. Our passionate team of creative experts is committed to delivering innovative and tailor-made solutions that elevate your brand to new heights.</p></div>
           <div className="about-content">
