@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import PageSections from './PageSections'
+import HeroHeading from './HeroHeading'
 import { imageProps, serviceImageSizes } from './images'
 
 const asset = (name: string) => `/assets/${name}`
@@ -60,7 +61,7 @@ function App() {
       <section className="hero" aria-labelledby="hero-heading">
         <div className="container hero-inner">
           <div className="hero-copy">
-            <h1 id="hero-heading">Crafting <span className="underlined">Visual</span> Stories: Unleashing Creative Essence</h1>
+            <HeroHeading />
             <a className="primary-button" href="#contact">Let’s talk <Arrow /></a>
           </div>
           <div className="hero-art"><div className="dot-pattern" aria-hidden="true" /><img className="hero-photo" {...imageProps('hero.png', '(max-width: 600px) 291px, (max-width: 1199px) 330px, 576px')} fetchPriority="high" decoding="async" alt="Woman reviewing color palettes at her desk" /></div>

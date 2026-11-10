@@ -16,6 +16,21 @@
 .dot-pattern{background-image:url('/assets/dots.svg'),url('/assets/dots.svg'),url('/assets/dots.svg'),url('/assets/dots.svg'),url('/assets/dots.svg'),url('/assets/dots.svg');background-position:0 0,0 23.6px,0 47.2px,0 70.8px,0 94.4px,0 118px;background-repeat:no-repeat}
 @media(max-width:600px){.about{padding-bottom:67px}.services{padding-bottom:49px}.services-grid{margin-top:22px}.view-more{margin-top:30px}.dot-pattern{background-position:0 0,0 21.6px,0 43.2px,0 64.8px,0 86.4px,0 108px}}
 
+#hero-heading { position: relative; }
+.hero-heading-overlay { position: absolute; inset: 0; pointer-events: none; }
+.hero-heading-character { position: absolute; transform-origin: 0% 50% -50px; }
+#hero-heading[data-animating='text'] .hero-heading-original { opacity: 0; }
+#hero-heading .underlined::after { transform-origin: left center; }
+#hero-heading[data-animating='text'] .underlined::after { opacity: 0; transform: scaleX(0); }
+#hero-heading[data-animating='underline'] .underlined::after { animation: hero-underline-reveal 420ms linear both; }
+@keyframes hero-underline-reveal {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #hero-heading .underlined::after { animation: none; }
+}
+
 .site-menu {
   transform-origin: top right;
   opacity: 0;
